@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+//generator client {
+//  provider = "prisma-client"
+//  output   = "../generated/prisma"
+//}
+//
+//datasource db {
+//  provider = "postgresql"
+//}
+
+generator client{
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  username  String  @unique
+  password  String  
+  role      String  @default("user")
+  createdAt DateTime @default(now())
+
+  medias Media[]
+}
+
+model Setor {
+  id        Int      @id @default(autoincrement())
+  nome      String   @unique
+  createdAt DateTime @default(now())
+
+  tvs       TV[]
+  playlists Playlist[]
+}
+
+model TV {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  identificador  String   @unique
+  online         Boolean  @default(false)
+  lastSeenAt     DateTime?
+
+  setorId Int
+  setor   Setor @relation(fields: [setorId], references: [id])
+}
+
+model Media {
+  id            Int      @id @default(autoincrement())
+  nome          String
+  filename      String
+  tipo          String
+  tamanho       Int
+  createdAt     DateTime @default(now())
+
+  uploadedById Int
+  uploadedBy   User @relation(fields: [uploadedById], references: [id])
+
+  playlistItems PlaylistMedia[]
+}
+
+model Playlist {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  ativa     Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  setorId Int
+  setor   Setor @relation(fields: [setorId], references: [id])
+
+  medias PlaylistMedia[]
+}
+
+model PlaylistMedia {
+  playlistId Int
+  mediaId    Int
+  ordem      Int
+
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  media    Media    @relation(fields: [mediaId], references: [id])
+
+  @@id([playlistId, mediaId])
+}
