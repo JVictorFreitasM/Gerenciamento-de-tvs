@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Player TV</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            background: black;
+            overflow: hidden;
+        }
+
+        video,
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <% const mediaUrl = `/videos/${setor.nome}/${media.filename}`; %>
+
+    <% if (media.tipo === "VIDEO") { %>
+
+        <video
+            id="tv-player"
+            autoplay
+            muted
+            loop
+            playsinline
+        >
+
+            <source
+                src="<%= mediaUrl %>?t=<%= Date.now() %>"
+                type="video/mp4"
+            >
+
+        </video>
+
+    <% } %>
+
+
+    <% if (media.tipo === "IMAGEM") { %>
+
+        <img
+            id="tv-image"
+            src="<%= mediaUrl %>?t=<%= Date.now() %>"
+        >
+
+    <% } %>
+
+
+    <script>
+
+        const mediaUrl =
+            "<%= mediaUrl %>";
+
+        let currentMediaTag = "";
+
+        async function checkForUpdates() {
+
+            try {
+
+                const response = await fetch(
+                    `${mediaUrl}?t=${Date.now()}`,
+                    {
+                        method: "HEAD"
+                    }
+                );
+
+                const lastModified =
+                    response.headers.get("Last-Modified");
+
+                const contentLength =
+                    response.headers.get("Content-Length");
+
+                const fileIdentifier =
+                    lastModified + contentLength;
+
+                if (!currentMediaTag) {
+
+                    currentMediaTag = fileIdentifier;
+
+                    return;
+                }
+
+                if (
+                    fileIdentifier &&
+                    currentMediaTag !== fileIdentifier
+                ) {
+
+                    console.log("Nova mídia detectada!");
+
+                    location.reload();
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao verificar mídia:",
+                    error
+                );
+
+            }
+        }
+
+        setInterval(checkForUpdates, 30000);
+
+
+        // fullscreen no primeiro clique
+        document.addEventListener("click", () => {
+
+            const el = document.documentElement;
+
+            if (el.requestFullscreen) {
+
+                el.requestFullscreen();
+
+            } else if (el.webkitRequestFullscreen) {
+
+                el.webkitRequestFullscreen();
+
+            } else if (el.msRequestFullscreen) {
+
+                el.msRequestFullscreen();
+
+            }
+
+        });
+
+
+        // tenta manter vídeo tocando
+        const video =
+            document.getElementById("tv-player");
+
+        if (video) {
+
+            document.addEventListener(
+                "visibilitychange",
+                () => {
+
+                    if (
+                        document.visibilityState === "visible"
+                    ) {
+
+                        video.play();
+
+                    }
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+</html>

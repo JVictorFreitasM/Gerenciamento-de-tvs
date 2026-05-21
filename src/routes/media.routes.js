@@ -1,0 +1,35 @@
+const router = require("express").Router();
+
+const auth = require("../middleware/auth");
+const upload = require("../middleware/upload");
+
+const mediaController = require("../controllers/media.controller");
+
+const checkPermission = (getSetorFn) => (req, res, next) => {
+    const setor = getSetorFn(req);
+    if (req.user && req.user.role !== 'ti' && req.user.role !== setor) {
+        return res.status(403).send("Acesso negado. Você só pode acessar o seu próprio setor.");
+    }
+    next();
+};
+
+router.get(
+    "/upload/:setor",
+    auth,
+    checkPermission(req => req.params.setor),
+    mediaController.uploadPage
+);
+
+router.post(
+    "/upload/:setor",
+    auth,
+    upload.single("media"),
+    mediaController.upload
+);
+
+router.get(
+    "/tv/:setor",
+    mediaController.tvPage
+);
+
+module.exports = router;

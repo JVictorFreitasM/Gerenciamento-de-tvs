@@ -18,6 +18,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src", "views"));
 
 app.use("/videos", express.static(path.join(__dirname, "videos")));
+app.use("/uploads", express.static("uploads"));
 
 app.get(
 	"/",
