@@ -1,6 +1,31 @@
 const prisma = require("../prisma/client");
 
 
+async function homePage(req, res) {
+
+    try {
+
+        const setores =
+            await prisma.setor.findMany({
+
+                orderBy: {
+                    nome: "asc"
+                }
+
+            });
+
+        res.render("home", {
+            setores
+        });
+
+    } catch (err) {
+
+        res.status(500).send(err.message);
+
+    }
+
+}
+
 function uploadPage(req, res) {
 
     const setor = req.params.setor || "geral";
@@ -53,13 +78,19 @@ async function tvPage(req, res) {
 
     }
 
+    if ( setor.nome === "diretoria" ) {
+        return res.render("player-diretoria", {
+            media, 
+            setor
+        });
+    }
+    
     res.render("player", {
         media,
         setor
     });
 
 }
-
 
 async function upload(req, res) {
 
@@ -119,6 +150,11 @@ async function upload(req, res) {
                 .send("Setor não encontrado.");
 
         }
+        
+        function bytesToMB(bytes) {
+            return parseFloat(bytes / (1024 * 1024).toFixed(2));
+            
+        }
 
         await prisma.media.create({
 
@@ -130,7 +166,7 @@ async function upload(req, res) {
 
                 tipo,
 
-                tamanho: file.size,
+                tamanho: bytesToMB(file.size), 
 
                 setorId: setor.id,
 
@@ -153,9 +189,18 @@ async function upload(req, res) {
 
 }
 
+async function dashboardPage(req, res) {
+
+    const setores = await prisma.setor.findMany();
+    return res.render("dashboard", {
+        setores
+    })
+}
 
 module.exports = {
     uploadPage,
     upload,
-    tvPage
+    tvPage,
+    dashboardPage,
+    homePage
 };

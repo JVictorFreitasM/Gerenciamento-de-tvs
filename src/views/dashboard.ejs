@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Painel Administrativo</h1>
+
+    <ul>
+
+        <% setores.forEach(setor => { %>
+
+            <li>
+
+                <a href="/upload/<%= setor.nome %>">
+
+                    Upload <%= setor.nome %>
+
+                </a>
+
+            </li>
+
+        <% }) %>
+
+    </ul>
+
+</body>
+
+</html>

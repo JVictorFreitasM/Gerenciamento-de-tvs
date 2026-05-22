@@ -14,6 +14,11 @@ const checkPermission = (getSetorFn) => (req, res, next) => {
 };
 
 router.get(
+    "/",
+    mediaController.homePage
+)
+
+router.get(
     "/upload/:setor",
     auth,
     checkPermission(req => req.params.setor),
@@ -30,6 +35,12 @@ router.post(
 router.get(
     "/tv/:setor",
     mediaController.tvPage
+);
+
+router.get(
+    "/dashboard",
+    auth,
+    mediaController.dashboardPage
 );
 
 module.exports = router;

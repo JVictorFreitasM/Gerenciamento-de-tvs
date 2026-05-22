@@ -8,7 +8,7 @@ async function login(req, res) {
             httpOnly: true
         });
 
-        res.redirect("/");
+        res.redirect("/dashboard");
     } catch (err) {
         res.send(err.message);
     }

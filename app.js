@@ -21,35 +21,82 @@ app.use("/videos", express.static(path.join(__dirname, "videos")));
 app.use("/uploads", express.static("uploads"));
 
 app.get(
-	"/",
-	auth,
-	async (req, res) => {
-		try {
-			const userId = req.user && req.user.id;
+    "/dashboard",
+    auth,
+    async (req, res) => {
 
-			const user = await prisma.user.findUnique({ where: { id: userId } });
+        try {
 
-			if (!user) {
-				res.clearCookie("token");
-				return res.redirect("/login");
-			}
+            const userId =
+                req.user && req.user.id;
 
-			let setores;
-			if (user.role === 'ti') {
-			    setores = await prisma.setor.findMany({ select: { nome: true } });
-			} else {
-			    setores = await prisma.setor.findMany({ 
-			        where: { nome: user.role }, 
-			        select: { nome: true } 
-			    });
-			}
-			const setoresList = setores.map(s => s.nome.toLowerCase());
+            const user =
+                await prisma.user.findUnique({
 
-			res.render("painel", { user, setores: setoresList });
-		} catch (err) {
-			res.status(500).send(err.message);
-		}
-	}
+                    where: {
+                        id: userId
+                    }
+
+                });
+
+            if (!user) {
+
+                res.clearCookie("token");
+
+                return res.redirect("/login");
+
+            }
+
+            let setores;
+
+            if (user.role === "ti") {
+
+                setores =
+                    await prisma.setor.findMany({
+
+                        select: {
+                            nome: true
+                        }
+
+                    });
+
+            } else {
+
+                setores =
+                    await prisma.setor.findMany({
+
+                        where: {
+                            nome: user.role
+                        },
+
+                        select: {
+                            nome: true
+                        }
+
+                    });
+
+            }
+
+            const setoresList =
+                setores.map(
+                    s => s.nome.toLowerCase()
+                );
+
+            res.render("painel", {
+
+                user,
+
+                setores: setoresList
+
+            });
+
+        } catch (err) {
+
+            res.status(500).send(err.message);
+
+        }
+
+    }
 );
 
 app.use(authRoutes);

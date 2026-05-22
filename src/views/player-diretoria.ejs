@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Player Diretoria</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* AREA DA MIDIA */
+
+        .media-area {
+            width: 60%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+        }
+
+        .media-area video,
+        .media-area img {
+            width: 100%;
+            height: 100%;
+            object-fit:fill;
+        }
+
+        /* AREA DOS GRAFICOS */
+
+        .dashboard-area {
+            width: 40%;
+            height: 100%;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-left: 2px solid #1a1a1a;
+        }
+
+        .chart {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-area .chart:first-child {
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <% const mediaUrl = `/videos/${setor.nome}/${media.filename}`; %>
+
+    <div class="container">
+
+        <!-- MIDIA -->
+        <div class="media-area">
+
+            <% if (media.tipo === "VIDEO") { %>
+
+                <video
+                    id="tv-player"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                >
+
+                    <source
+                        src="<%= mediaUrl %>?t=<%= Date.now() %>"
+                        type="video/mp4"
+                    >
+
+                </video>
+
+            <% } %>
+
+            <% if (media.tipo === "IMAGEM") { %>
+
+                <img
+                    id="tv-image"
+                    src="<%= mediaUrl %>?t=<%= Date.now() %>"
+                    alt="<%= media.nome %>"
+                >
+
+            <% } %>
+
+        </div>
+
+        <!-- GRAFICOS -->
+        <div class="dashboard-area">
+
+            <!-- GRAFICO SUPERIOR -->
+            <div class="chart">
+
+                <div
+                    id="chart_right_top"
+                    class="tradingview-widget-container">
+                </div>
+
+            </div>
+
+            <!-- GRAFICO INFERIOR -->
+            <div class="chart">
+
+                <div
+                    id="chart_right_bottom"
+                    class="tradingview-widget-container">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT EXTERNO TRADINGVIEW -->
+    <script
+        type="text/javascript"
+        src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
+        async>
+    </script>
+
+    <!-- SCRIPT DA PAGINA -->
+    <script>
+
+        // =========================
+        // GRAFICOS
+        // =========================
+
+        function createWidget(containerId, symbol, interval) {
+
+            const container =
+                document.getElementById(containerId);
+
+            if (!container) return;
+
+            // limpa widget anterior
+            container.innerHTML = "";
+
+            const script =
+                document.createElement("script");
+
+            script.type = "text/javascript";
+
+            script.src =
+                "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+            script.async = true;
+
+            const config = {
+
+                autosize: true,
+
+                symbol: symbol,
+
+                interval: interval,
+
+                timezone: "America/Sao_Paulo",
+
+                theme: "dark",
+
+                style: "3",
+
+                locale: "br",
+
+                backgroundColor:
+                    "rgba(15,15,15,1)",
+
+                gridColor:
+                    "rgba(12,50,153,0.06)",
+
+                hide_top_toolbar: true,
+
+                hide_side_toolbar: true,
+
+                allow_symbol_change: false,
+
+                save_image: false,
+
+                calendar: false,
+
+                details: false,
+
+                hotlist: false,
+
+                hide_legend: false,
+
+                hide_volume: false,
+
+                withdateranges: false,
+
+                container_id: containerId
+            };
+
+            script.innerHTML =
+                JSON.stringify(config);
+
+            container.appendChild(script);
+        }
+
+        function atualizarDashboard() {
+
+            createWidget(
+                "chart_right_top",
+                "FX_IDC:USDBRL",
+                "5"
+            );
+
+            createWidget(
+                "chart_right_bottom",
+                "CAPITALCOM:COPPER",
+                "1"
+            );
+        }
+
+        // inicia dashboard
+        atualizarDashboard();
+
+        // atualiza a cada 10s
+        // setInterval(
+        //     atualizarDashboard,
+        //     10000
+        // );
+
+        // =========================
+        // PLAYER
+        // =========================
+
+        const mediaUrl =
+            "<%= mediaUrl %>";
+
+        let currentMediaTag = "";
+
+        async function checkForUpdates() {
+
+            try {
+
+                const response = await fetch(
+                    `${mediaUrl}?t=${Date.now()}`,
+                    {
+                        method: "HEAD"
+                    }
+                );
+
+                const lastModified =
+                    response.headers.get("Last-Modified");
+
+                const contentLength =
+                    response.headers.get("Content-Length");
+
+                const fileIdentifier =
+                    lastModified + contentLength;
+
+                if (!currentMediaTag) {
+
+                    currentMediaTag = fileIdentifier;
+
+                    return;
+                }
+
+                if (
+                    fileIdentifier &&
+                    currentMediaTag !== fileIdentifier
+                ) {
+
+                    console.log(
+                        "Nova mídia detectada!"
+                    );
+
+                    location.reload();
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao verificar mídia:",
+                    error
+                );
+
+            }
+
+        }
+
+        // verifica atualização da mídia
+        setInterval(
+            checkForUpdates,
+            30000
+        );
+
+        // fullscreen
+        document.addEventListener(
+            "click",
+            () => {
+
+                const el =
+                    document.documentElement;
+
+                if (el.requestFullscreen) {
+
+                    el.requestFullscreen();
+
+                }
+
+            }
+        );
+
+        // evita video pausado
+        const video =
+            document.getElementById("tv-player");
+
+        if (video) {
+
+            document.addEventListener(
+                "visibilitychange",
+                () => {
+
+                    if (
+                        document.visibilityState
+                        === "visible"
+                    ) {
+
+                        video.play();
+
+                    }
+
+                }
+            );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
