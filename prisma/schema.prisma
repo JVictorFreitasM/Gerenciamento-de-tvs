@@ -76,25 +76,23 @@ model Media {
 
 model Playlist {
   id        Int      @id @default(autoincrement())
-  nome      String,
-  ativa     Boolean  @default(true)
+  nome      String
   createdAt DateTime @default(now())
 
-  setorId Int
+  setorId Int   @unique
   setor   Setor @relation(fields: [setorId], references: [id])
 
   medias PlaylistMedia[]
 }
 
 model PlaylistMedia {
+  id         Int     @id @default(autoincrement())
   playlistId Int
   mediaId    Int
   ordem      Int
-  duracao    Int?
-  ativo      Boolean @default(true)
-
+  
   playlist Playlist @relation(fields: [playlistId], references: [id])
   media    Media    @relation(fields: [mediaId], references: [id])
 
-  @@id([playlistId, mediaId])
+  
 }

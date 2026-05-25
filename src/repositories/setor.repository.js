@@ -18,7 +18,16 @@ async function findByName (nome) {
     });
 }
 
+async function create(data) {
+
+    return prisma.setor.create({
+        data
+    });
+
+}
+
 module.exports = {
         findAll,
-        findByName
+        findByName,
+        create
     }

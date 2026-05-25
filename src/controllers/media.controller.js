@@ -1,6 +1,7 @@
 const prisma = require("../prisma/client");
 const { bytesToMB } = require("../utils/file.utils");
 const mediaService = require("../services/media.service");
+
 //FUNÇÃO REFATORADA PARA O SETOR SERVICE
 // async function homePage(req, res) {
 
@@ -226,9 +227,7 @@ async function upload(req, res) {
 
 }
 
-module.exports = {
-    upload
-};
+
 
 //FUNÇÃO REFATORADA PARA O SETOR SERVICE
 // async function dashboardPage(req, res) {
