@@ -4,6 +4,9 @@ const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
 
 const mediaController = require("../controllers/media.controller");
+const dashboardController = require("../controllers/dashboard.controller");
+const homeController = require("../controllers/home.controller");
+const tvController = require("../controllers/tv.controller");
 
 const checkPermission = (getSetorFn) => (req, res, next) => {
     const setor = getSetorFn(req);
@@ -15,7 +18,7 @@ const checkPermission = (getSetorFn) => (req, res, next) => {
 
 router.get(
     "/",
-    mediaController.homePage
+    homeController.homePage
 )
 
 router.get(
@@ -34,13 +37,13 @@ router.post(
 
 router.get(
     "/tv/:setor",
-    mediaController.tvPage
+    tvController.tvPage
 );
 
 router.get(
     "/dashboard",
     auth,
-    mediaController.dashboardPage
+    dashboardController.dashboardPage
 );
 
 module.exports = router;

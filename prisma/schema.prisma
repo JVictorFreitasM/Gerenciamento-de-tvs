@@ -76,7 +76,7 @@ model Media {
 
 model Playlist {
   id        Int      @id @default(autoincrement())
-  nome      String
+  nome      String,
   ativa     Boolean  @default(true)
   createdAt DateTime @default(now())
 
