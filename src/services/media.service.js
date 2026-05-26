@@ -42,35 +42,42 @@ async function upload(req) {
         );
 
     }
-
     const media =
-        await mediaRepository.create({
-
-            nome: file.originalname,
-
-            filename: file.filename,
-
-            tipo,
-
-            tamanho: bytesToMB(file.size),
-
-            setorId: setor.id,
-
-            uploadedById: req.user.id
-
-        });
-
+    await mediaRepository.create({
+        
+        nome: file.filename,
+        
+        filename: file.filename,
+        
+        tipo,
+        
+        tamanho: bytesToMB(file.size),
+        
+        setorId: setor.id,
+        
+        uploadedById: req.user.id
+        
+    });
+    
     const playlist =
-        await playlistRepository
-            .findBySetorId(setor.id);
-
+    await playlistRepository
+    .findBySetorId(setor.id);
+    
     if (!playlist) {
-
+        
         throw new Error(
             "Playlist não encontrada"
         );
-
+        
     }
+
+    const lastItem =
+    await playlistMediaRepository.findLastOrder(
+        playlist.id
+    );
+
+    const nextOrder =
+        lastItem ? lastItem.ordem + 1 : 1;
 
     await playlistMediaRepository.create({
 
@@ -78,7 +85,7 @@ async function upload(req) {
 
         mediaId: media.id,
 
-        ordem: 1
+        ordem: nextOrder
 
     });
 

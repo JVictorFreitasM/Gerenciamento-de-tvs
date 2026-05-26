@@ -32,17 +32,15 @@ const storage = multer.diskStorage({
 
     filename: (req, file, cb) => {
 
-        const extensao =
-            path.extname(file.originalname);
+        const uniqueName =
+        Date.now() + "_" + file.originalname;
 
-        cb(
-            null,
-            "media" + extensao
-        );
+        cb(null, uniqueName);
+}
 
     }
 
-});
+);
 
 
 module.exports =

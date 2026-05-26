@@ -39,11 +39,15 @@
             overflow: hidden;
         }
 
-        .media-area video,
-        .media-area img {
+        #player {
             width: 100%;
             height: 100%;
-            object-fit:fill;
+        }
+
+        .media-element {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
         }
 
         /* AREA DOS GRAFICOS */
@@ -79,41 +83,12 @@
 
 <body>
 
-    <% const mediaUrl = `/videos/${setor.nome}/${media.filename}`; %>
-
     <div class="container">
 
         <!-- MIDIA -->
         <div class="media-area">
 
-            <% if (media.tipo === "VIDEO") { %>
-
-                <video
-                    id="tv-player"
-                    autoplay
-                    muted
-                    loop
-                    playsinline
-                >
-
-                    <source
-                        src="<%= mediaUrl %>?t=<%= Date.now() %>"
-                        type="video/mp4"
-                    >
-
-                </video>
-
-            <% } %>
-
-            <% if (media.tipo === "IMAGEM") { %>
-
-                <img
-                    id="tv-image"
-                    src="<%= mediaUrl %>?t=<%= Date.now() %>"
-                    alt="<%= media.nome %>"
-                >
-
-            <% } %>
+            <div id="player"></div>
 
         </div>
 
@@ -247,78 +222,112 @@
         // inicia dashboard
         atualizarDashboard();
 
-        // atualiza a cada 10s
-        // setInterval(
-        //     atualizarDashboard,
-        //     10000
-        // );
-
         // =========================
-        // PLAYER
+        // PLAYER PLAYLIST
         // =========================
 
-        const mediaUrl =
-            "<%= mediaUrl %>";
+        const medias =
+            <%- JSON.stringify(medias) %>;
 
-        let currentMediaTag = "";
+        let currentIndex = 0;
 
-        async function checkForUpdates() {
+        const player =
+            document.getElementById("player");
 
-            try {
+        function getMediaUrl(media) {
 
-                const response = await fetch(
-                    `${mediaUrl}?t=${Date.now()}`,
-                    {
-                        method: "HEAD"
-                    }
-                );
-
-                const lastModified =
-                    response.headers.get("Last-Modified");
-
-                const contentLength =
-                    response.headers.get("Content-Length");
-
-                const fileIdentifier =
-                    lastModified + contentLength;
-
-                if (!currentMediaTag) {
-
-                    currentMediaTag = fileIdentifier;
-
-                    return;
-                }
-
-                if (
-                    fileIdentifier &&
-                    currentMediaTag !== fileIdentifier
-                ) {
-
-                    console.log(
-                        "Nova mídia detectada!"
-                    );
-
-                    location.reload();
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "Erro ao verificar mídia:",
-                    error
-                );
-
-            }
-
+            return `/videos/<%= setor.nome %>/${media.filename}?t=${Date.now()}`;
         }
 
-        // verifica atualização da mídia
-        setInterval(
-            checkForUpdates,
-            30000
-        );
+        function renderMedia() {
 
-        // fullscreen
+            if (!medias.length) {
+
+                player.innerHTML = `
+                    <h1 style="color:white">
+                        Nenhuma mídia encontrada
+                    </h1>
+                `;
+
+                return;
+            }
+
+            const media =
+                medias[currentIndex];
+
+            const mediaUrl =
+                getMediaUrl(media);
+
+            player.innerHTML = "";
+
+            // VIDEO
+            if (media.tipo === "VIDEO") {
+
+                const video =
+                    document.createElement("video");
+
+                video.src = mediaUrl;
+
+                video.autoplay = true;
+                video.muted = true;
+                video.playsInline = true;
+
+                video.controls = false;
+                video.loop = false;
+
+                video.className =
+                    "media-element";
+
+                video.onended = () => {
+
+                    nextMedia();
+
+                };
+
+                player.appendChild(video);
+
+                video.play();
+            }
+
+            // IMAGEM
+            else if (media.tipo === "IMAGEM") {
+
+                const img =
+                    document.createElement("img");
+
+                img.src = mediaUrl;
+
+                img.className =
+                    "media-element";
+
+                player.appendChild(img);
+
+                setTimeout(() => {
+
+                    nextMedia();
+
+                }, 5000);
+            }
+        }
+
+        function nextMedia() {
+
+            currentIndex++;
+
+            if (currentIndex >= medias.length) {
+
+                currentIndex = 0;
+            }
+
+            renderMedia();
+        }
+
+        renderMedia();
+
+        // =========================
+        // FULLSCREEN
+        // =========================
+
         document.addEventListener(
             "click",
             () => {
@@ -334,30 +343,6 @@
 
             }
         );
-
-        // evita video pausado
-        const video =
-            document.getElementById("tv-player");
-
-        if (video) {
-
-            document.addEventListener(
-                "visibilitychange",
-                () => {
-
-                    if (
-                        document.visibilityState
-                        === "visible"
-                    ) {
-
-                        video.play();
-
-                    }
-
-                }
-            );
-
-        }
 
     </script>
 

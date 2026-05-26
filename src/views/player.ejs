@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
     <meta charset="UTF-8">
 
     <title>Player TV</title>
@@ -13,111 +15,136 @@
             overflow: hidden;
         }
 
-        video,
-        img {
+        #player {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .media-element {
             width: 100vw;
             height: 100vh;
             object-fit: cover;
         }
 
     </style>
+
 </head>
 
 <body>
 
-    <% const mediaUrl = `/videos/${setor.nome}/${media.filename}`; %>
-
-    <% if (media.tipo === "VIDEO") { %>
-
-        <video
-            id="tv-player"
-            autoplay
-            muted
-            loop
-            playsinline
-        >
-
-            <source
-                src="<%= mediaUrl %>?t=<%= Date.now() %>"
-                type="video/mp4"
-            >
-
-        </video>
-
-    <% } %>
-
-
-    <% if (media.tipo === "IMAGEM") { %>
-
-        <img
-            id="tv-image"
-            src="<%= mediaUrl %>?t=<%= Date.now() %>"
-        >
-
-    <% } %>
-
+    <div id="player"></div>
 
     <script>
 
-        const mediaUrl =
-            "<%= mediaUrl %>";
+        const medias =
+            <%- JSON.stringify(medias) %>;
 
-        let currentMediaTag = "";
+        let currentIndex = 0;
 
-        async function checkForUpdates() {
+        const player =
+            document.getElementById("player");
 
-            try {
+        function getMediaUrl(media) {
 
-                const response = await fetch(
-                    `${mediaUrl}?t=${Date.now()}`,
-                    {
-                        method: "HEAD"
-                    }
-                );
+            return `/videos/<%= setor.nome %>/${media.filename}?t=${Date.now()}`;
+        }
 
-                const lastModified =
-                    response.headers.get("Last-Modified");
+        function renderMedia() {
 
-                const contentLength =
-                    response.headers.get("Content-Length");
+            if (!medias.length) {
 
-                const fileIdentifier =
-                    lastModified + contentLength;
+                player.innerHTML = `
+                    <h1 style="color:white">
+                        Nenhuma mídia encontrada
+                    </h1>
+                `;
 
-                if (!currentMediaTag) {
+                return;
+            }
 
-                    currentMediaTag = fileIdentifier;
+            const media =
+                medias[currentIndex];
 
-                    return;
-                }
+            const mediaUrl =
+                getMediaUrl(media);
 
-                if (
-                    fileIdentifier &&
-                    currentMediaTag !== fileIdentifier
-                ) {
+            player.innerHTML = "";
 
-                    console.log("Nova mídia detectada!");
+            // =========================
+            // VIDEO
+            // =========================
+            if (media.tipo === "VIDEO") {
 
-                    location.reload();
-                }
+                const video =
+                    document.createElement("video");
 
-            } catch (error) {
+                video.src = mediaUrl;
 
-                console.error(
-                    "Erro ao verificar mídia:",
-                    error
-                );
+                video.autoplay = true;
+                video.muted = true;
+                video.playsInline = true;
 
+                video.controls = false;
+                video.loop = false;
+
+                video.className =
+                    "media-element";
+
+                video.onended = () => {
+
+                    nextMedia();
+
+                };
+
+                player.appendChild(video);
+
+                video.play();
+            }
+
+            // =========================
+            // IMAGEM
+            // =========================
+            else if (media.tipo === "IMAGEM") {
+
+                const img =
+                    document.createElement("img");
+
+                img.src = mediaUrl;
+
+                img.className =
+                    "media-element";
+
+                player.appendChild(img);
+
+                setTimeout(() => {
+
+                    nextMedia();
+
+                }, 5000);
             }
         }
 
-        setInterval(checkForUpdates, 30000);
+        function nextMedia() {
 
+            currentIndex++;
 
-        // fullscreen no primeiro clique
+            if (currentIndex >= medias.length) {
+
+                currentIndex = 0;
+            }
+
+            renderMedia();
+        }
+
+        renderMedia();
+
+        // =========================
+        // FULLSCREEN
+        // =========================
         document.addEventListener("click", () => {
 
-            const el = document.documentElement;
+            const el =
+                document.documentElement;
 
             if (el.requestFullscreen) {
 
@@ -135,31 +162,8 @@
 
         });
 
-
-        // tenta manter vídeo tocando
-        const video =
-            document.getElementById("tv-player");
-
-        if (video) {
-
-            document.addEventListener(
-                "visibilitychange",
-                () => {
-
-                    if (
-                        document.visibilityState === "visible"
-                    ) {
-
-                        video.play();
-
-                    }
-
-                }
-            );
-
-        }
-
     </script>
 
 </body>
+
 </html>

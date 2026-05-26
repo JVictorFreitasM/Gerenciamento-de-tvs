@@ -8,7 +8,7 @@ async function tvPage(req, res) {
 
         res.render(data.view, {
             setor: data.setor,
-            media: data.media
+            medias: data.medias
         });
     } catch (error) {
         if (error.message === "Setor não encontrado.") {
