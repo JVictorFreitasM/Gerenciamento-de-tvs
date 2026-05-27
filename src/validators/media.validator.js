@@ -1,4 +1,3 @@
-
 function validateMedia(file) {
     if (!file) {
         throw new Error("Nenhum arquivo enviado.");

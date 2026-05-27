@@ -1,32 +1,8 @@
 const prisma = require("../prisma/client");
 const { bytesToMB } = require("../utils/file.utils");
 const mediaService = require("../services/media.service");
+const playlistService = require("../services/playlist.service");
 
-//FUNÇÃO REFATORADA PARA O SETOR SERVICE
-// async function homePage(req, res) {
-
-//     try {
-
-//         const setores =
-//             await prisma.setor.findMany({
-
-//                 orderBy: {
-//                     nome: "asc"
-//                 }
-
-//             });
-
-//         res.render("home", {
-//             setores
-//         });
-
-//     } catch (err) {
-
-//         res.status(500).send(err.message);
-
-//     }
-
-// }
 
 function uploadPage(req, res) {
 
@@ -36,162 +12,11 @@ function uploadPage(req, res) {
 
 }
 
-// FUNÇÃO REFATORADA PARA O TV SERVICE
-// async function tvPage(req, res) {
-
-//     const setorNome = req.params.setor || "geral";
-
-//     const setor = await prisma.setor.findFirst({
-//         where: {
-//             nome: setorNome
-//         }
-//     });
-
-//     console.log("SETOR:");
-//     console.log(setor);
-
-//     if (!setor) {
-
-//         return res
-//             .status(404)
-//             .send("Setor não encontrado.");
-
-//     }
-
-//     const media = await prisma.media.findFirst({
-
-//         where: {
-//             setorId: setor.id
-//         },
-
-//         orderBy: {
-//             createdAt: "desc"
-//         }
-
-//     });
-
-//     console.log("MEDIA:");
-//     console.log(media);
-
-//     if (!media) {
-
-//         return res
-//             .send("Nenhuma mídia cadastrada.");
-
-//     }
-
-//     if ( setor.nome === "diretoria" ) {
-//         return res.render("player-diretoria", {
-//             media, 
-//             setor
-//         });
-//     }
-    
-//     res.render("player", {
-//         media,
-//         setor
-//     });
-
-// }
-
-// FUNÇÃO REFATORADA
-// async function upload(req, res) {
-
-//     try {
-
-//         const setorNome =
-//             req.params.setor;
-
-//         console.log("SETOR URL:");
-//         console.log(setorNome);
-
-//         if (!req.file) {
-
-//             return res
-//                 .status(400)
-//                 .send("Nenhum arquivo enviado.");
-
-//         }
-
-//         const file = req.file;
-
-//         const permitido =
-
-//             file.mimetype.startsWith("video") ||
-
-//             file.mimetype.startsWith("image");
-
-//         if (!permitido) {
-
-//             return res
-//                 .status(400)
-//                 .send("Tipo de arquivo não permitido.");
-
-//         }
-
-//         const tipo =
-//             file.mimetype.startsWith("video")
-//                 ? "VIDEO"
-//                 : "IMAGEM";
-
-//         const setor =
-//             await prisma.setor.findFirst({
-
-//                 where: {
-//                     nome: setorNome
-//                 }
-
-//             });
-
-//         console.log("SETOR ENCONTRADO:");
-//         console.log(setor);
-
-//         if (!setor) {
-
-//             return res
-//                 .status(404)
-//                 .send("Setor não encontrado.");
-
-//         }
-        
-        
-//         await prisma.media.create({
-
-//             data: {
-
-//                 nome: file.originalname,
-
-//                 filename: file.filename,
-
-//                 tipo,
-
-//                 tamanho: bytesToMB(file.size), 
-
-//                 setorId: setor.id,
-
-//                 uploadedById:
-//                     req.user.id
-
-//             }
-
-//         });
-
-//         res.redirect("/");
-
-//     } catch (err) {
-
-//         console.error(err);
-
-//         res.status(500).send(err.message);
-
-//     }
-
-// }
 
 async function upload(req, res) {
     try {
         await mediaService.upload(req);
-        res.redirect("/");
+        res.redirect(`/playlist/${req.params.setor}`);
     } catch (err) {
         if (err.message === "FILE_REQUIRED") {
 
@@ -227,21 +52,48 @@ async function upload(req, res) {
 
 }
 
+async function listByPlaylist(req, res) {
+    try {
+        const playlistId = req.params.playlistId;
 
+        if (!playlistId) {
+            return res.status(404).send("Playlist não encontrada.");
+        }
 
-//FUNÇÃO REFATORADA PARA O SETOR SERVICE
-// async function dashboardPage(req, res) {
+        const medias = await mediaService.listByPlaylist(playlistId);
 
-//     const setores = await prisma.setor.findMany();
-//     return res.render("dashboard", {
-//         setores
-//     })
-// }
+        return res.render("playlist-detalhe", {
+            playlist, 
+            medias,
+            user: req.user
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send(err.message);
+    }
+}
 
-
-
+async function remove(req, res) {
+    try {
+        await mediaService.remove(Number
+            (req.params.id));
+        return res.json({
+            success: true,
+            message: "Mídia removida com sucesso."
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
 
 module.exports = {
     uploadPage,
-    upload
-};
+    upload,
+    listByPlaylist,
+    remove
+}
+

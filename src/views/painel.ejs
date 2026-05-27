@@ -84,6 +84,22 @@
             background: #444;
             color: white;
         }
+        .btn-playlist {
+
+            display: inline-block;
+
+            padding: 10px 20px;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -107,8 +123,13 @@
                 📺 Assistir Transmissão
             </a>
 
-            <a href="/upload/<%= setor %>" class="btn-action btn-change">
-                🔄 Trocar Vídeo da TV
+            <a
+                href="/playlist/<%= setor %>"
+                class="btn-playlist"
+            >
+
+                Editar Playlist
+
             </a>
 
         </div>

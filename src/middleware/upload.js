@@ -33,15 +33,42 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
 
         const uniqueName =
-        Date.now() + "_" + file.originalname;
+            Date.now() + "_" + file.originalname;
 
         cb(null, uniqueName);
-}
-
     }
 
-);
+});
+
+
+// =========================
+// VALIDACAO MP4
+// =========================
+
+function fileFilter(req, file, cb) {
+
+    const isVideo =
+        file.mimetype.startsWith("video");
+
+    if (
+        isVideo &&
+        file.mimetype !== "video/mp4"
+    ) {
+
+        return cb(
+            new Error(
+                "Apenas vídeos MP4 são permitidos."
+            ),
+            false
+        );
+    }
+
+    cb(null, true);
+}
 
 
 module.exports =
-    multer({ storage });
+    multer({
+        storage,
+        fileFilter
+    });

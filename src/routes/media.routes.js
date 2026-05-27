@@ -46,4 +46,16 @@ router.get(
     dashboardController.dashboardPage
 );
 
+router.get(
+    "playlist/:playlistId",
+    auth,
+    mediaController.listByPlaylist
+)
+
+router.delete(
+    "/media/:id",
+    auth,
+    mediaController.remove
+)
+
 module.exports = router;

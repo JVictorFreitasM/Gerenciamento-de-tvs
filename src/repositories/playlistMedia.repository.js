@@ -36,8 +36,71 @@ async function findByPlayListId(playlistId) {
         }
     });
 }
+
+async function findById(id) {
+
+    return prisma.playlistMedia.findUnique({
+
+        where: {
+            id
+        }
+
+    });
+}
+
+async function findByPlaylistIdAndOrdem(
+    playlistId,
+    ordem
+) {
+
+    return prisma.playlistMedia.findFirst({
+
+        where: {
+
+            playlistId,
+
+            ordem
+
+        }
+
+    });
+}
+
+async function updateOrdem(
+    id,
+    ordem
+) {
+
+    return prisma.playlistMedia.update({
+
+        where: {
+            id
+        },
+
+        data: {
+            ordem
+        }
+
+    });
+}
+
+async function deleteMediaById(
+    mediaId
+) {
+
+    return prisma.playlistMedia.deleteMany({
+        where: {
+            mediaId
+        }
+    });
+}
+
 module.exports = {
     create,
     findByPlayListId,
-    findLastOrder 
+    findLastOrder,
+    findById,
+    findByPlaylistIdAndOrdem,
+    updateOrdem,
+    deleteMediaById
 };

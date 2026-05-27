@@ -93,6 +93,6 @@ model PlaylistMedia {
   
   playlist Playlist @relation(fields: [playlistId], references: [id])
   media    Media    @relation(fields: [mediaId], references: [id])
-
+  @@unique([playlistId, ordem])
   
 }

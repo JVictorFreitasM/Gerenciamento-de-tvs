@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const mediaRepository =
     require("../repositories/media.repository");
 
@@ -93,6 +95,30 @@ async function upload(req) {
 
 }
 
+async function remove(id) {
+    const media = await mediaRepository.findById(id);
+
+    if (!media) {
+        throw new Error("Midia nao encontrada.");
+    }
+
+    await playlistMediaRepository.deleteMediaById(id);
+
+    const setor = await setorRepository.findById(media.setorId)
+
+    const filePath = path.join(
+        __dirname,
+        "../../videos/",
+        setor.nome,
+        media.filename
+    )
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
+    await mediaRepository.remove(id);
+}
+
 module.exports = {
-    upload
+    upload,
+    remove
 };

@@ -26,8 +26,19 @@ async function create(data) {
 
 }
 
+async function findById(id) {
+
+    return prisma.setor.findUnique({
+        where: {
+            id
+        }
+    })
+}
+
 module.exports = {
         findAll,
         findByName,
-        create
+        create,
+        findById
     }
+    

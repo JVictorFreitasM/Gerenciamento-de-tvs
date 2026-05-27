@@ -19,7 +19,25 @@ async function create(data) {
     });
 }
 
+async function findById(id) {
+    return prisma.media.findUnique({
+        where: {
+            id
+        }
+    })
+}
+
+async function remove(id) {
+    return prisma.media.delete({
+        where: {
+            id
+        }
+    })
+}
+
 module.exports = {
     findLatestBySetorId,
-    create
+    create,
+    findById,
+    remove
 }
