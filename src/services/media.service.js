@@ -118,7 +118,19 @@ async function remove(id) {
     await mediaRepository.remove(id);
 }
 
+async function removeMany(ids) {
+    try {
+        for (const id of ids) {
+            await remove(Number(id));
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
 module.exports = {
     upload,
-    remove
+    remove,
+    removeMany
 };

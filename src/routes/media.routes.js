@@ -50,12 +50,18 @@ router.get(
     "playlist/:playlistId",
     auth,
     mediaController.listByPlaylist
-)
+);
+
+router.delete(
+    "/media/bulk",
+    mediaController.removeMany
+);
 
 router.delete(
     "/media/:id",
     auth,
     mediaController.remove
-)
+);
+
 
 module.exports = router;

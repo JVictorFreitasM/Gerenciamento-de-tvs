@@ -90,10 +90,29 @@ async function remove(req, res) {
     }
 }
 
+async function removeMany(req, res) {
+    try {
+        const { ids } = req.body;
+        await mediaService.removeMany(ids);
+        return res.json({
+            success: true,
+            message: "Mídias removidas com sucesso."
+        })
+    } catch (err) {
+        consol.error(err);
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
 module.exports = {
     uploadPage,
     upload,
     listByPlaylist,
-    remove
+    remove,
+    removeMany
 }
+
 
