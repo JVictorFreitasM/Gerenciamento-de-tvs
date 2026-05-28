@@ -15,8 +15,16 @@ function uploadPage(req, res) {
 
 async function upload(req, res) {
     try {
+        if(!req.files || req.files.length === 0) {
+
+            return res
+                .status(400)
+                .send("Nenhum arquivo enviado.");
+        }
+
         await mediaService.upload(req);
         res.redirect(`/playlist/${req.params.setor}`);
+        
     } catch (err) {
         if (err.message === "FILE_REQUIRED") {
 

@@ -63,6 +63,7 @@ model Media {
   filename  String
   tipo      MediaTipo
   tamanho   Int
+  duracao   Int       @default(10)
   createdAt DateTime  @default(now())
 
   setorId Int

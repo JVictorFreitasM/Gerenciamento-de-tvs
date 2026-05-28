@@ -31,7 +31,7 @@ router.get(
 router.post(
     "/upload/:setor",
     auth,
-    upload.single("media"),
+    upload.array("media"),
     mediaController.upload
 );
 

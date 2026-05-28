@@ -22,17 +22,11 @@ const {
 
 async function upload(req) {
 
-    const setorNome =
-        req.params.setor;
+    const setorNome = req.params.setor;
 
-    validateMedia(req.file);
+    validateMedia(req.files);
 
-    const file = req.file;
-
-    const tipo =
-        file.mimetype.startsWith("video")
-            ? "VIDEO"
-            : "IMAGEM";
+    const files = req.files;
 
     const setor =
         await setorRepository.findByName(setorNome);
@@ -44,54 +38,72 @@ async function upload(req) {
         );
 
     }
-    const media =
-    await mediaRepository.create({
-        
-        nome: file.filename,
-        
-        filename: file.filename,
-        
-        tipo,
-        
-        tamanho: bytesToMB(file.size),
-        
-        setorId: setor.id,
-        
-        uploadedById: req.user.id
-        
-    });
-    
+
     const playlist =
-    await playlistRepository
-    .findBySetorId(setor.id);
-    
+        await playlistRepository
+            .findBySetorId(setor.id);
+
     if (!playlist) {
-        
+
         throw new Error(
             "Playlist não encontrada"
         );
-        
+
     }
 
-    const lastItem =
-    await playlistMediaRepository.findLastOrder(
-        playlist.id
-    );
+    let lastItem =
+        await playlistMediaRepository.findLastOrder(
+            playlist.id
+        );
 
-    const nextOrder =
+    let nextOrder =
         lastItem ? lastItem.ordem + 1 : 1;
 
-    await playlistMediaRepository.create({
+    const uploadedMedias = [];
 
-        playlistId: playlist.id,
+    for (const file of files) {
 
-        mediaId: media.id,
+        const tipo =
+            file.mimetype.startsWith("video")
+                ? "VIDEO"
+                : "IMAGEM";
 
-        ordem: nextOrder
+        const media =
+            await mediaRepository.create({
 
-    });
+                nome: file.originalname,
 
-    return media;
+                filename: file.filename,
+
+                tipo,
+
+                duracao: 10,
+
+                tamanho: bytesToMB(file.size),
+
+                setorId: setor.id,
+
+                uploadedById: req.user.id
+
+            });
+
+        await playlistMediaRepository.create({
+
+            playlistId: playlist.id,
+
+            mediaId: media.id,
+
+            ordem: nextOrder
+
+        });
+
+        uploadedMedias.push(media);
+
+        nextOrder++;
+
+    }
+
+    return uploadedMedias;
 
 }
 

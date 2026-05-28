@@ -23,22 +23,15 @@
         }
 
         body {
-
             background: #0f172a;
-
             font-family: Arial, sans-serif;
-
             color: white;
-
             min-height: 100vh;
-
             padding: 30px;
         }
 
         .container {
-
-            max-width: 1400px;
-
+            max-width: 1500px;
             margin: 0 auto;
         }
 
@@ -47,45 +40,30 @@
         ========================= */
 
         .header {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             margin-bottom: 30px;
         }
 
         .header h1 {
-
             font-size: 32px;
-
-            color: white;
         }
 
         .header span {
-
             color: #60a5fa;
         }
 
         .back-button {
-
             background: #1e293b;
-
             color: white;
-
             padding: 12px 18px;
-
             border-radius: 8px;
-
             text-decoration: none;
-
             transition: 0.2s;
         }
 
         .back-button:hover {
-
             background: #334155;
         }
 
@@ -94,15 +72,10 @@
         ========================= */
 
         .card {
-
             background: #111827;
-
             border-radius: 14px;
-
             padding: 25px;
-
-            box-shadow:
-                0 0 20px rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
 
         /* =========================
@@ -110,17 +83,11 @@
         ========================= */
 
         .top-actions {
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
             gap: 15px;
-
             flex-wrap: wrap;
-
             margin-bottom: 25px;
         }
 
@@ -129,52 +96,37 @@
         ========================= */
 
         .upload-form {
-
             display: flex;
-
             gap: 15px;
-
             align-items: center;
-
             flex-wrap: wrap;
         }
 
         .upload-form input[type="file"] {
-
             background: #1e293b;
-
             color: white;
-
             border: 1px solid #334155;
-
             padding: 10px;
-
             border-radius: 8px;
-
             cursor: pointer;
         }
 
-        .upload-button {
-
-            background: #2563eb;
-
+        .upload-button,
+        .delete-selected-button {
             border: none;
-
             color: white;
-
             padding: 12px 20px;
-
             border-radius: 8px;
-
             font-weight: bold;
-
             cursor: pointer;
-
             transition: 0.2s;
         }
 
-        .upload-button:hover {
+        .upload-button {
+            background: #2563eb;
+        }
 
+        .upload-button:hover {
             background: #1d4ed8;
         }
 
@@ -183,33 +135,15 @@
         ========================= */
 
         .delete-selected-button {
-
             background: #dc2626;
-
-            border: none;
-
-            color: white;
-
-            padding: 12px 20px;
-
-            border-radius: 8px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.2s;
         }
 
         .delete-selected-button:hover {
-
             background: #b91c1c;
         }
 
         .delete-selected-button:disabled {
-
             opacity: 0.5;
-
             cursor: not-allowed;
         }
 
@@ -218,103 +152,110 @@
         ========================= */
 
         .table-wrapper {
-
             overflow-x: auto;
         }
 
         table {
-
             width: 100%;
-
             border-collapse: collapse;
+            table-layout: fixed;
         }
 
         thead {
-
             background: #1e293b;
         }
 
-        th {
-
-            padding: 16px;
-
-            text-align: left;
-
-            color: #93c5fd;
-
-            font-size: 14px;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-        }
-
+        th,
         td {
-
-            padding: 18px 16px;
-
+            padding: 16px;
+            text-align: left;
             border-top: 1px solid #1e293b;
-
             vertical-align: middle;
         }
 
-        tbody tr {
+        th {
+            color: #93c5fd;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
+        tbody tr {
             transition:
                 transform 0.25s ease,
                 opacity 0.25s ease,
                 background 0.2s ease;
 
             cursor: grab;
-
             position: relative;
         }
 
         tbody tr:hover {
-
-            background:
-                rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.03);
         }
 
         tbody tr.selected {
-
-            background:
-                rgba(37,99,235,0.18);
+            background: rgba(37,99,235,0.18);
         }
 
         tbody tr.dragging {
-
             opacity: 0.4;
-
             transform: scale(0.98);
-
-            background:
-                rgba(37,99,235,0.15);
+            background: rgba(37,99,235,0.15);
         }
 
         tbody tr.drag-over {
+            border-top: 2px solid #60a5fa;
+        }
 
-            border-top:
-                2px solid #60a5fa;
+        /* =========================
+           COLUMNS
+        ========================= */
+
+        .checkbox-column {
+            width: 60px;
+        }
+
+        .order-column {
+            width: 90px;
+        }
+
+        .type-column {
+            width: 130px;
+        }
+
+        .duration-column {
+            width: 140px;
+        }
+
+        .preview-column {
+            width: 120px;
+        }
+
+        .actions-column {
+            width: 180px;
         }
 
         /* =========================
            CHECKBOX
         ========================= */
 
-        .checkbox-column {
-
-            width: 50px;
-        }
-
         .select-checkbox,
         #select-all {
-
             width: 18px;
-
             height: 18px;
-
             cursor: pointer;
+        }
+
+        /* =========================
+           MEDIA NAME
+        ========================= */
+
+        .media-name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         /* =========================
@@ -322,32 +263,44 @@
         ========================= */
 
         .badge {
-
             display: inline-block;
-
             padding: 6px 12px;
-
             border-radius: 999px;
-
             font-size: 12px;
-
             font-weight: bold;
         }
 
         .badge-video {
-
-            background:
-                rgba(37,99,235,0.2);
-
+            background: rgba(37,99,235,0.2);
             color: #60a5fa;
         }
 
         .badge-image {
-
-            background:
-                rgba(16,185,129,0.2);
-
+            background: rgba(16,185,129,0.2);
             color: #34d399;
+        }
+
+        /* =========================
+           DURATION
+        ========================= */
+
+        .duration-input {
+            width: 80px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: white;
+            outline: none;
+        }
+
+        .duration-input:focus {
+            border-color: #60a5fa;
+        }
+
+        .duration-disabled {
+            color: #64748b;
+            font-size: 13px;
         }
 
         /* =========================
@@ -355,62 +308,55 @@
         ========================= */
 
         .actions {
-
             display: flex;
-
             gap: 10px;
-
             align-items: center;
+            flex-wrap: nowrap;
         }
 
         .action-button {
-
             width: 40px;
-
+            min-width: 40px;
             height: 40px;
 
             border: none;
-
             border-radius: 8px;
 
             cursor: pointer;
 
             font-size: 18px;
-
             font-weight: bold;
 
             transition: 0.2s;
 
             color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-up {
-
             background: #2563eb;
         }
 
         .btn-up:hover {
-
             background: #1d4ed8;
         }
 
         .btn-down {
-
             background: #7c3aed;
         }
 
         .btn-down:hover {
-
             background: #6d28d9;
         }
 
         .btn-remove {
-
             background: #dc2626;
         }
 
         .btn-remove:hover {
-
             background: #b91c1c;
         }
 
@@ -419,68 +365,48 @@
         ========================= */
 
         .preview-trigger {
-
             position: relative;
         }
 
         .preview-card {
-
-            position: absolute;
-
-            top: 50%;
-
-            left: 110%;
-
-            transform:
-                translateY(-50%)
-                scale(0.95);
+            position: fixed;
 
             width: 280px;
-
             height: 160px;
 
             border-radius: 14px;
-
             overflow: hidden;
 
             background: #0f172a;
 
-            border:
-                1px solid rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.08);
 
             box-shadow:
                 0 15px 35px rgba(0,0,0,0.45);
 
             opacity: 0;
-
             pointer-events: none;
 
             transition:
                 opacity 0.2s ease,
                 transform 0.2s ease;
 
-            z-index: 999;
+            transform: scale(0.95);
+
+            z-index: 9999;
         }
 
         .preview-card img,
         .preview-card video {
-
             width: 100%;
-
             height: 100%;
-
             object-fit: cover;
-
             display: block;
         }
 
         .preview-trigger:hover .preview-card {
-
             opacity: 1;
-
-            transform:
-                translateY(-50%)
-                scale(1);
+            transform: scale(1);
         }
 
         /* =========================
@@ -488,11 +414,8 @@
         ========================= */
 
         .empty {
-
             text-align: center;
-
             padding: 40px;
-
             color: #94a3b8;
         }
 
@@ -501,40 +424,27 @@
         ========================= */
 
         .moving-up {
-
-            animation:
-                moveUpAnimation 0.35s ease;
+            animation: moveUpAnimation 0.35s ease;
         }
 
         .moving-down {
-
-            animation:
-                moveDownAnimation 0.35s ease;
+            animation: moveDownAnimation 0.35s ease;
         }
 
         @keyframes moveUpAnimation {
 
             0% {
-
-                transform:
-                    translateY(0);
-
+                transform: translateY(0);
                 opacity: 1;
             }
 
             50% {
-
-                transform:
-                    translateY(-12px);
-
+                transform: translateY(-12px);
                 opacity: 0.5;
             }
 
             100% {
-
-                transform:
-                    translateY(0);
-
+                transform: translateY(0);
                 opacity: 1;
             }
         }
@@ -542,26 +452,17 @@
         @keyframes moveDownAnimation {
 
             0% {
-
-                transform:
-                    translateY(0);
-
+                transform: translateY(0);
                 opacity: 1;
             }
 
             50% {
-
-                transform:
-                    translateY(12px);
-
+                transform: translateY(12px);
                 opacity: 0.5;
             }
 
             100% {
-
-                transform:
-                    translateY(0);
-
+                transform: translateY(0);
                 opacity: 1;
             }
         }
@@ -571,18 +472,13 @@
         ========================= */
 
         #upload-overlay {
-
             position: fixed;
-
             inset: 0;
 
-            background:
-                rgba(15,23,42,0.85);
+            background: rgba(15,23,42,0.85);
 
             display: none;
-
             justify-content: center;
-
             align-items: center;
 
             z-index: 99999;
@@ -591,13 +487,9 @@
         }
 
         .upload-loading {
-
             background: #111827;
-
             padding: 40px;
-
             border-radius: 16px;
-
             text-align: center;
 
             box-shadow:
@@ -605,29 +497,20 @@
         }
 
         .upload-loading p {
-
             margin-top: 20px;
-
             font-size: 18px;
-
-            color: white;
         }
 
         .spinner {
-
             width: 60px;
-
             height: 60px;
 
             border-radius: 50%;
 
             border: 5px solid rgba(255,255,255,0.1);
+            border-top: 5px solid #60a5fa;
 
-            border-top:
-                5px solid #60a5fa;
-
-            animation:
-                spin 1s linear infinite;
+            animation: spin 1s linear infinite;
 
             margin: 0 auto;
         }
@@ -635,9 +518,7 @@
         @keyframes spin {
 
             to {
-
-                transform:
-                    rotate(360deg);
+                transform: rotate(360deg);
             }
         }
 
@@ -647,6 +528,7 @@
 
 <body>
 
+    <!-- OVERLAY -->
     <div id="upload-overlay">
 
         <div class="upload-loading">
@@ -667,21 +549,17 @@
         <div class="header">
 
             <h1>
-
                 Playlist
                 <span>
                     <%= setor.nome %>
                 </span>
-
             </h1>
 
             <a
                 href="/dashboard"
                 class="back-button"
             >
-
                 Voltar
-
             </a>
 
         </div>
@@ -689,17 +567,15 @@
         <!-- CARD -->
         <div class="card">
 
+            <!-- TOP ACTIONS -->
             <div class="top-actions">
 
                 <!-- UPLOAD -->
                 <form
                     id="upload-form"
                     class="upload-form"
-
                     action="/upload/<%= setor.nome %>"
-
                     method="POST"
-
                     enctype="multipart/form-data"
                 >
 
@@ -707,6 +583,7 @@
                         type="file"
                         name="media"
                         accept=".mp4,image/*"
+                        multiple
                         required
                     >
 
@@ -714,9 +591,7 @@
                         type="submit"
                         class="upload-button"
                     >
-
                         Upload
-
                     </button>
 
                 </form>
@@ -727,14 +602,12 @@
                     class="delete-selected-button"
                     disabled
                 >
-
                     Excluir Selecionados
-
                 </button>
 
             </div>
 
-            <!-- TABELA -->
+            <!-- TABLE -->
             <div class="table-wrapper">
 
                 <table>
@@ -752,15 +625,29 @@
 
                             </th>
 
-                            <th>Ordem</th>
+                            <th class="order-column">
+                                Ordem
+                            </th>
 
-                            <th>Nome</th>
+                            <th>
+                                Nome
+                            </th>
 
-                            <th>Tipo</th>
+                            <th class="type-column">
+                                Tipo
+                            </th>
 
-                            <th>Preview</th>
+                            <th class="duration-column">
+                                Duração
+                            </th>
 
-                            <th>Ações</th>
+                            <th class="preview-column">
+                                Preview
+                            </th>
+
+                            <th class="actions-column">
+                                Ações
+                            </th>
 
                         </tr>
 
@@ -773,12 +660,10 @@
                             <tr>
 
                                 <td
-                                    colspan="6"
+                                    colspan="7"
                                     class="empty"
                                 >
-
                                     Nenhuma mídia na playlist.
-
                                 </td>
 
                             </tr>
@@ -814,10 +699,11 @@
                                 </td>
 
                                 <!-- NOME -->
-                                <td>
-
+                                <td
+                                    class="media-name"
+                                    title="<%= item.media.nome %>"
+                                >
                                     <%= item.media.nome %>
-
                                 </td>
 
                                 <!-- TIPO -->
@@ -825,22 +711,37 @@
 
                                     <% if (item.media.tipo === "VIDEO") { %>
 
-                                        <span
-                                            class="badge badge-video"
-                                        >
-
+                                        <span class="badge badge-video">
                                             VIDEO
-
                                         </span>
 
                                     <% } else { %>
 
-                                        <span
-                                            class="badge badge-image"
+                                        <span class="badge badge-image">
+                                            IMAGEM
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+                                <!-- DURATION -->
+                                <td>
+
+                                    <% if (item.media.tipo === "IMAGEM") { %>
+
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            class="duration-input"
+                                            value="<%= item.media.duracao || 10 %>"
+                                            data-media-id="<%= item.media.id %>"
                                         >
 
-                                            IMAGEM
+                                    <% } else { %>
 
+                                        <span class="duration-disabled">
+                                            Automático
                                         </span>
 
                                     <% } %>
@@ -860,8 +761,6 @@
                                                 src="/videos/<%= setor.nome %>/<%= item.media.filename %>"
                                                 muted
                                                 preload="metadata"
-                                                loop
-                                                playsinline
                                             ></video>
 
                                         <% } else { %>
@@ -877,7 +776,7 @@
 
                                 </td>
 
-                                <!-- AÇÕES -->
+                                <!-- ACTIONS -->
                                 <td>
 
                                     <div class="actions">
@@ -893,9 +792,7 @@
                                                 type="submit"
                                                 class="action-button btn-up"
                                             >
-
                                                 ↑
-
                                             </button>
 
                                         </form>
@@ -911,9 +808,7 @@
                                                 type="submit"
                                                 class="action-button btn-down"
                                             >
-
                                                 ↓
-
                                             </button>
 
                                         </form>
@@ -924,9 +819,7 @@
                                             class="action-button btn-remove"
                                             onclick="deleteMedia(this, <%= item.media.id %>)"
                                         >
-
                                             ×
-
                                         </button>
 
                                     </div>
@@ -950,23 +843,32 @@
     <script>
 
         // =========================
-        // CHECKBOXES
+        // ELEMENTS
         // =========================
 
         const selectAll =
-            document.getElementById(
-                "select-all"
-            );
+            document.getElementById("select-all");
 
         const deleteSelectedButton =
-            document.getElementById(
-                "delete-selected-button"
-            );
+            document.getElementById("delete-selected-button");
+
+        const uploadForm =
+            document.getElementById("upload-form");
+
+        const overlay =
+            document.getElementById("upload-overlay");
+
+        const tbody =
+            document.getElementById("playlist-body");
 
         const checkboxes =
-            document.querySelectorAll(
-                ".select-checkbox"
-            );
+            document.querySelectorAll(".select-checkbox");
+
+        let draggedRow = null;
+
+        // =========================
+        // CHECKBOXES
+        // =========================
 
         function updateSelectedState() {
 
@@ -979,9 +881,7 @@
                 checked.length === 0;
 
             document
-                .querySelectorAll(
-                    ".media-row"
-                )
+                .querySelectorAll(".media-row")
                 .forEach(row => {
 
                     const checkbox =
@@ -1000,32 +900,28 @@
 
         selectAll?.addEventListener(
             "change",
-            function () {
+            () => {
 
-                checkboxes.forEach(
-                    checkbox => {
+                checkboxes.forEach(checkbox => {
 
-                        checkbox.checked =
-                            selectAll.checked;
+                    checkbox.checked =
+                        selectAll.checked;
 
-                    }
-                );
+                });
 
                 updateSelectedState();
 
             }
         );
 
-        checkboxes.forEach(
-            checkbox => {
+        checkboxes.forEach(checkbox => {
 
-                checkbox.addEventListener(
-                    "change",
-                    updateSelectedState
-                );
+            checkbox.addEventListener(
+                "change",
+                updateSelectedState
+            );
 
-            }
-        );
+        });
 
         // =========================
         // DELETE INDIVIDUAL
@@ -1042,15 +938,14 @@
             try {
 
                 const response = await fetch(
-
                     `/media/${id}`,
-
                     {
                         method: "DELETE"
                     }
                 );
 
-                const data = await response.json();
+                const data =
+                    await response.json();
 
                 if (!data.success) {
 
@@ -1060,10 +955,9 @@
 
                 }
 
-                const row =
-                    button.closest("tr");
+                button.closest("tr").remove();
 
-                row.remove();
+                updateSelectedState();
 
             } catch (error) {
 
@@ -1104,8 +998,6 @@
 
                 if (!confirmed) return;
 
-                // BACKEND SERÁ IMPLEMENTADO DEPOIS
-
                 const ids = Array.from(checked).map(
 
                     checkbox =>
@@ -1117,28 +1009,19 @@
                 try {
 
                     const response = await fetch(
-
                         "/media/bulk",
-
                         {
-
                             method: "DELETE",
 
                             headers: {
-
                                 "Content-Type":
                                     "application/json"
-
                             },
 
                             body: JSON.stringify({
-
                                 ids
-
                             })
-
                         }
-
                     );
 
                     const data =
@@ -1146,9 +1029,7 @@
 
                     if (!data.success) {
 
-                        alert(
-                            "Erro ao excluir"
-                        );
+                        alert("Erro ao excluir");
 
                         return;
 
@@ -1161,6 +1042,8 @@
                             .remove();
 
                     });
+
+                    updateSelectedState();
 
                 } catch (error) {
 
@@ -1176,38 +1059,62 @@
         );
 
         // =========================
-        // VIDEO PREVIEW
+        // IMAGE DURATION
         // =========================
 
         document
-            .querySelectorAll(
-                ".preview-trigger"
-            )
-            .forEach(trigger => {
+            .querySelectorAll(".duration-input")
+            .forEach(input => {
 
-                const video =
-                    trigger.querySelector(
-                        "video"
-                    );
+                input.addEventListener(
+                    "change",
+                    async () => {
 
-                if (!video) return;
+                        const duration =
+                            Number(input.value);
 
-                trigger.addEventListener(
-                    "mouseenter",
-                    () => {
+                        const mediaId =
+                            input.dataset.mediaId;
 
-                        video.play();
+                        if (duration < 1) {
 
-                    }
-                );
+                            alert(
+                                "A duração mínima é 1 segundo."
+                            );
 
-                trigger.addEventListener(
-                    "mouseleave",
-                    () => {
+                            input.value = 10;
 
-                        video.pause();
+                            return;
 
-                        video.currentTime = 0;
+                        }
+
+                        try {
+
+                            await fetch(
+                                `/media/${mediaId}/duration`,
+                                {
+                                    method: "PUT",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body: JSON.stringify({
+                                        duracao: duration
+                                    })
+                                }
+                            );
+
+                        } catch (error) {
+
+                            console.error(error);
+
+                            alert(
+                                "Erro ao salvar duração."
+                            );
+
+                        }
 
                     }
                 );
@@ -1215,18 +1122,42 @@
             });
 
         // =========================
+        // VIDEO PREVIEW
+        // =========================
+
+        document
+    .querySelectorAll(".preview-trigger")
+    .forEach(trigger => {
+
+        const card =
+            trigger.querySelector(".preview-card");
+
+        trigger.addEventListener(
+            "mousemove",
+            event => {
+
+                card.style.left =
+                    (event.clientX + 20) + "px";
+
+                card.style.top =
+                    (event.clientY - 80) + "px";
+
+            }
+        );
+
+    });
+
+        // =========================
         // MOVE UP
         // =========================
 
         document
-            .querySelectorAll(
-                ".move-up-form"
-            )
+            .querySelectorAll(".move-up-form")
             .forEach(form => {
 
                 form.addEventListener(
                     "submit",
-                    function (event) {
+                    event => {
 
                         event.preventDefault();
 
@@ -1238,9 +1169,7 @@
                         );
 
                         setTimeout(() => {
-
                             form.submit();
-
                         }, 300);
 
                     }
@@ -1253,14 +1182,12 @@
         // =========================
 
         document
-            .querySelectorAll(
-                ".move-down-form"
-            )
+            .querySelectorAll(".move-down-form")
             .forEach(form => {
 
                 form.addEventListener(
                     "submit",
-                    function (event) {
+                    event => {
 
                         event.preventDefault();
 
@@ -1272,9 +1199,7 @@
                         );
 
                         setTimeout(() => {
-
                             form.submit();
-
                         }, 300);
 
                     }
@@ -1286,17 +1211,8 @@
         // DRAG AND DROP
         // =========================
 
-        const tbody =
-            document.getElementById(
-                "playlist-body"
-            );
-
-        let draggedRow = null;
-
         document
-            .querySelectorAll(
-                "#playlist-body tr"
-            )
+            .querySelectorAll("#playlist-body tr")
             .forEach(row => {
 
                 row.addEventListener(
@@ -1369,24 +1285,17 @@
 
                             const orderedIds =
                                 Array.from(
+                                    tbody.querySelectorAll("tr")
+                                ).map(tr => tr.dataset.id);
 
-                                    tbody.querySelectorAll(
-                                        "tr"
-                                    )
-
-                                ).map(tr =>
-
-                                    tr.dataset.id
-
-                                );
-
-                            const response = await fetch(
+                            await fetch(
                                 "/playlist/reorder",
                                 {
                                     method: "POST",
 
                                     headers: {
-                                        "Content-Type": "application/json"
+                                        "Content-Type":
+                                            "application/json"
                                     },
 
                                     body: JSON.stringify({
@@ -1394,10 +1303,6 @@
                                     })
                                 }
                             );
-
-                            const data = await response.json();
-
-                            console.log(data);
 
                             location.reload();
 
@@ -1412,16 +1317,6 @@
         // UPLOAD LOCK
         // =========================
 
-        const uploadForm =
-            document.getElementById(
-                "upload-form"
-            );
-
-        const overlay =
-            document.getElementById(
-                "upload-overlay"
-            );
-
         uploadForm.addEventListener(
             "submit",
             () => {
@@ -1430,9 +1325,7 @@
                     "flex";
 
                 document
-                    .querySelectorAll(
-                        "button"
-                    )
+                    .querySelectorAll("button")
                     .forEach(button => {
 
                         button.disabled = true;
