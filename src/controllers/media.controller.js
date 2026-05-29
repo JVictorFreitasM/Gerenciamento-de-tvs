@@ -81,6 +81,25 @@ async function listByPlaylist(req, res) {
     }
 }
 
+async function updateDuration(req, res) {
+    try {
+        const { duracao } = req.body;
+        const { id } = req.params;
+        
+        await mediaService.updateDuration(id, duracao);
+
+        return res.json({
+            success: true
+        })        
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        })
+    }
+}
+
 async function remove(req, res) {
     try {
         await mediaService.remove(Number
@@ -120,7 +139,8 @@ module.exports = {
     upload,
     listByPlaylist,
     remove,
-    removeMany
+    removeMany,
+    updateDuration
 }
 
 

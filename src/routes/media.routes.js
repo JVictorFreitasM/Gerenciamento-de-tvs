@@ -47,10 +47,16 @@ router.get(
 );
 
 router.get(
-    "playlist/:playlistId",
+    "/playlist/:playlistId",
     auth,
     mediaController.listByPlaylist
 );
+
+router.put(
+    "/media/:id/duration",
+    auth,
+    mediaController.updateDuration
+)
 
 router.delete(
     "/media/bulk",

@@ -239,6 +239,8 @@
             return `/videos/<%= setor.nome %>/${media.filename}?t=${Date.now()}`;
         }
 
+        let imageTimeout = null;
+
         function renderMedia() {
 
             if (!medias.length) {
@@ -260,7 +262,12 @@
 
             player.innerHTML = "";
 
+            // limpa timeout anterior
+            clearTimeout(imageTimeout);
+
+            // =========================
             // VIDEO
+            // =========================
             if (media.tipo === "VIDEO") {
 
                 const video =
@@ -289,7 +296,9 @@
                 video.play();
             }
 
+            // =========================
             // IMAGEM
+            // =========================
             else if (media.tipo === "IMAGEM") {
 
                 const img =
@@ -302,11 +311,11 @@
 
                 player.appendChild(img);
 
-                setTimeout(() => {
+                imageTimeout = setTimeout(() => {
 
                     nextMedia();
 
-                }, 5000);
+                }, Number(media.duracao || 10) * 1000);
             }
         }
 

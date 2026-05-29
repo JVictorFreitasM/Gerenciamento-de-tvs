@@ -107,6 +107,23 @@ async function upload(req) {
 
 }
 
+async function updateDuration(id, duracao) {
+    const media = await mediaRepository.findById(id);
+
+    duracao = Number(duracao);
+
+    if (isNaN(duracao) || duracao < 1) {
+        throw new Error(
+            "Duracao deve ser maior que 1 segundo."
+        );
+    }
+    
+    return mediaRepository.updateDuration(
+        id,
+        duracao
+    );
+}
+
 async function remove(id) {
     const media = await mediaRepository.findById(id);
 
@@ -114,7 +131,14 @@ async function remove(id) {
         throw new Error("Midia nao encontrada.");
     }
 
+    //Remove vinculo midia-playlist
     await playlistMediaRepository.deleteMediaById(id);
+
+    const references = await playlistMediaRepository.countByMediaId(id);
+    //Verifica se ainda há vinculos com playlists. Se houver, não permite a exclusão.
+    if (references > 0) {
+        return;
+    }
 
     const setor = await setorRepository.findById(media.setorId)
 
@@ -144,5 +168,6 @@ async function removeMany(ids) {
 module.exports = {
     upload,
     remove,
-    removeMany
+    removeMany,
+    updateDuration
 };

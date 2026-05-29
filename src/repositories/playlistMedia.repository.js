@@ -95,6 +95,14 @@ async function deleteMediaById(
     });
 }
 
+async function countByMediaId(mediaId){
+    return prisma.playlistMedia.count({
+        where: {
+            mediaId
+        }
+    });
+}
+
 module.exports = {
     create,
     findByPlayListId,
@@ -102,5 +110,6 @@ module.exports = {
     findById,
     findByPlaylistIdAndOrdem,
     updateOrdem,
-    deleteMediaById
+    deleteMediaById,
+    countByMediaId
 };

@@ -22,15 +22,28 @@ async function create(data) {
 async function findById(id) {
     return prisma.media.findUnique({
         where: {
-            id
+            id: Number(id)
         }
     })
+}
+
+async function updateDuration(id, duracao) {
+
+    return prisma.media.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            duracao: Number(duracao)
+        }
+    });
+
 }
 
 async function remove(id) {
     return prisma.media.delete({
         where: {
-            id
+            id: Number(id)
         }
     })
 }
@@ -39,5 +52,6 @@ module.exports = {
     findLatestBySetorId,
     create,
     findById,
-    remove
+    remove,
+    updateDuration
 }
