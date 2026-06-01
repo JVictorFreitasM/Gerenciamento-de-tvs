@@ -19,7 +19,6 @@ async function createSetor(nome) {
     return setor;
 }
 
-
 module.exports = {
     getAllSetores,
     getSetorByName,

@@ -4,18 +4,34 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  // seed setores
-  const setoresToSeed = ["administrativo", "comercial", "diretoria"];
+  // 1. Mapeamos os setores e definimos o nome de cada playlist correspondente
+  const setoresToSeed = [
+    { nome: "manutenção",     playlist: "Playlist Manutenção" },
+    { nome: "administrativo", playlist: "Playlist Administrativo" },
+    { nome: "produção",       playlist: "Playlist Produção" },
+    { nome: "diretoria",      playlist: "Playlist Diretoria" },
+    { nome: "logistica",      playlist: "Playlist Logistica" },
+    { nome: "comercial",      playlist: "Playlist Comercial" }
+  ];
 
-  for (const nome of setoresToSeed) {
+  for (const s of setoresToSeed) {
     await prisma.setor.upsert({
-      where: { nome },
-      update: {},
-      create: { nome }
+      where: { nome: s.nome },
+      update: {}, // Mantém como está se o setor já existir
+      create: { 
+        nome: s.nome,
+        // Criando a playlist vinculada usando a relação do seu Schema
+        playlists: {
+          create: [
+            { nome: s.playlist }
+          ]
+        }
+      }
     });
-    console.log(`Seeded setor: ${nome}`);
+    console.log(`Seeded setor: ${s.nome} com a playlist: ${s.playlist}`);
   }
 
+  // Seed de usuários
   const plain = '123';
   const saltRounds = 10;
   const hash = await bcrypt.hash(plain, saltRounds);

@@ -20,7 +20,9 @@ async function getTVData(setorNome) {
 
     const medias =playlistMedias.map(item => item.media);
 
-    const view = setor.nome === "diretoria" ? "player-diretoria" : "player";
+    const view = setor.nome.toLowerCase() === "diretoria"
+    ? "player-diretoria"
+    : "player";
 
     return {
         view,

@@ -13,7 +13,10 @@ async function findAll() {
 async function findByName (nome) {
     return prisma.setor.findFirst({
         where: {
-            nome
+            nome: {
+                equals: nome,
+                mode: "insensitive"
+            }
         }
     });
 }
