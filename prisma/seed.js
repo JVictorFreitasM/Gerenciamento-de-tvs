@@ -38,7 +38,12 @@ async function main() {
 
   const users = [
     { username: 'ti', password: hash, role: 'ti' },
-    { username: 'diretoria', password: hash, role: 'diretoria' }
+    { username: 'administrativo', password: hash, role: 'administrativo' },
+    { username: 'diretoria', password: hash, role: 'diretoria' },
+    { username: 'logistica', password: hash, role: 'logistica' },
+    { username: 'comercial', password: hash, role: 'comercial' },
+    { username: 'manutencao', password: hash, role: 'manutencao' },
+    { username: 'producao', password: hash, role: 'producao' },
   ];
 
   for (const u of users) {
