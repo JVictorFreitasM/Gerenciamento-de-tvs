@@ -2,6 +2,12 @@
 
 Sistema web para gerenciar painéis de TV corporativos por setor, permitindo o upload de mídias (vídeos e imagens), organização em playlists e exibição automática nas TVs de cada setor.
 
+---
+<img width="1871" height="690" alt="Painel-de-Controle-—-TVs-07-21-2026_10_59_AM" src="https://github.com/user-attachments/assets/1c2ad6e1-35b4-487b-b2a7-552bdeae97c9" />
+
+<img width="1851" height="994" alt="Playlist-diretoria-07-21-2026_11_00_AM" src="https://github.com/user-attachments/assets/5a548bf0-5c0d-47d2-b837-f39ff55bae70" />
+
+----
 ## Funcionalidades
 
 - Autenticação de usuários (login/logout) com JWT
@@ -38,12 +44,6 @@ src/
 ├── views/           # Templates EJS (login, dashboard, player, playlist etc.)
 └── utils/           # Funções utilitárias
 ```
-
-## Modelo de dados
-
-O banco é modelado com Prisma e possui as seguintes entidades principais: `User`, `Setor`, `TV`, `Media` e `Playlist`/`PlaylistMedia`. Veja o diagrama abaixo:
-
-![Diagrama ER](diagrama%20ER.png)
 
 ## Como rodar com Docker (recomendado)
 
