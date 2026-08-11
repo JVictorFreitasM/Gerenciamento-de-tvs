@@ -1,0 +1,108 @@
+version: "3.9"
+
+services:
+
+  postgres:
+
+    image: postgres:17
+
+    container_name: painel-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: painel
+
+    # 5433 no host - a porta 5432 padrao ja esta ocupada por um Postgres
+    # nativo rodando fora do Docker nesta maquina. A app fala com o
+    # container pela rede interna do compose (postgres:5432), entao isso
+    # so afeta acesso externo (ex.: um client de banco local).
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OS 12-B: guarda a sessao local do backend (access/refresh token do IdP - nunca no front).
+  redis:
+
+    image: redis:7-alpine
+
+    container_name: painel-redis
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: painel-app
+
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    # OS 12-B, secao 3.11: 5001 - confirmar que esta livre na maquina de teste
+    # (sem colisao com IdP 3000, Bot 3001/5173/5174, Farol).
+    ports:
+      - "5001:5001"
+
+    env_file:
+      - .env
+
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/painel
+      PORT: 5001
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+      TZ: America/Fortaleza
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    volumes:
+      - ./videos:/app/videos
+
+  # OS 12-C: SPA (React/Vite) servida por nginx, porta propria (5002) - sem
+  # colisao com o backend (5001), IdP (3000), Bot (3001/5173/5174) nem
+  # Farol. nginx faz proxy de /api pro backend (mesma origem do ponto de
+  # vista do navegador); /auth/*, /tv/*, /videos, /uploads continuam indo
+  # direto pro backend (porta 5001), fora da SPA.
+  frontend:
+
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: painel-frontend
+
+    restart: unless-stopped
+
+    depends_on:
+      - app
+
+    ports:
+      - "5002:80"
+
+volumes:
+  postgres_data:

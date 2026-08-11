@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Player Diretoria</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: black;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* AREA DA MIDIA */
+
+        .media-area {
+            width: 60%;
+            height: 100%;
+            background: black;
+            overflow: hidden;
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+
+        .media-element {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        /* AREA DOS GRAFICOS */
+
+        .dashboard-area {
+            width: 40%;
+            height: 100%;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-left: 2px solid #1a1a1a;
+        }
+
+        .chart {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-area .chart:first-child {
+            border-bottom: 2px solid #1a1a1a;
+        }
+
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- MIDIA -->
+        <div class="media-area">
+
+            <div id="player"></div>
+
+        </div>
+
+        <!-- GRAFICOS -->
+        <div class="dashboard-area">
+
+            <!-- GRAFICO SUPERIOR -->
+            <div class="chart">
+
+                <div
+                    id="chart_right_top"
+                    class="tradingview-widget-container">
+                </div>
+
+            </div>
+
+            <!-- GRAFICO INFERIOR -->
+            <div class="chart">
+
+                <div
+                    id="chart_right_bottom"
+                    class="tradingview-widget-container">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT EXTERNO TRADINGVIEW -->
+    <script
+        type="text/javascript"
+        src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
+        async>
+    </script>
+
+    <!-- SCRIPT DA PAGINA -->
+    <script>
+
+        // =========================
+        // GRAFICOS
+        // =========================
+
+        function createWidget(containerId, symbol, interval) {
+
+            const container =
+                document.getElementById(containerId);
+
+            if (!container) return;
+
+            // limpa widget anterior
+            container.innerHTML = "";
+
+            const script =
+                document.createElement("script");
+
+            script.type = "text/javascript";
+
+            script.src =
+                "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+
+            script.async = true;
+
+            const config = {
+
+                autosize: true,
+
+                symbol: symbol,
+
+                interval: interval,
+
+                timezone: "America/Sao_Paulo",
+
+                theme: "dark",
+
+                style: "3",
+
+                locale: "br",
+
+                backgroundColor:
+                    "rgba(15,15,15,1)",
+
+                gridColor:
+                    "rgba(12,50,153,0.06)",
+
+                hide_top_toolbar: true,
+
+                hide_side_toolbar: true,
+
+                allow_symbol_change: false,
+
+                save_image: false,
+
+                calendar: false,
+
+                details: false,
+
+                hotlist: false,
+
+                hide_legend: false,
+
+                hide_volume: false,
+
+                withdateranges: false,
+
+                container_id: containerId
+            };
+
+            script.innerHTML =
+                JSON.stringify(config);
+
+            container.appendChild(script);
+        }
+
+        function atualizarDashboard() {
+
+            createWidget(
+                "chart_right_top",
+                "FX_IDC:USDBRL",
+                "5"
+            );
+
+            createWidget(
+                "chart_right_bottom",
+                "CAPITALCOM:COPPER",
+                "1"
+            );
+        }
+
+        // inicia dashboard
+        atualizarDashboard();
+
+        // =========================
+        // PLAYER PLAYLIST
+        // =========================
+
+        const medias =
+            <%- JSON.stringify(medias) %>;
+
+        let currentIndex = 0;
+
+        const player =
+            document.getElementById("player");
+
+        const tvToken = <%- JSON.stringify(token) %>;
+
+        function getMediaUrl(media) {
+
+            return `/videos/<%= setor.nome %>/${media.filename}?t=${Date.now()}&token=${tvToken}`;
+        }
+
+        let imageTimeout = null;
+
+        function renderMedia() {
+
+            if (!medias.length) {
+
+                player.innerHTML = `
+                    <h1 style="color:white">
+                        Nenhuma mídia encontrada
+                    </h1>
+                `;
+
+                return;
+            }
+
+            const media =
+                medias[currentIndex];
+
+            const mediaUrl =
+                getMediaUrl(media);
+
+            player.innerHTML = "";
+
+            // limpa timeout anterior
+            clearTimeout(imageTimeout);
+
+            // =========================
+            // VIDEO
+            // =========================
+            if (media.tipo === "VIDEO") {
+
+                const video =
+                    document.createElement("video");
+
+                video.src = mediaUrl;
+
+                video.autoplay = true;
+                video.muted = true;
+                video.playsInline = true;
+
+                video.controls = false;
+                video.loop = false;
+
+                video.className =
+                    "media-element";
+
+                video.onended = () => {
+
+                    nextMedia();
+
+                };
+
+                player.appendChild(video);
+
+                video.play();
+            }
+
+            // =========================
+            // IMAGEM
+            // =========================
+            else if (media.tipo === "IMAGEM") {
+
+                const img =
+                    document.createElement("img");
+
+                img.src = mediaUrl;
+
+                img.className =
+                    "media-element";
+
+                player.appendChild(img);
+
+                imageTimeout = setTimeout(() => {
+
+                    nextMedia();
+
+                }, Number(media.duracao || 10) * 1000);
+            }
+        }
+
+        function nextMedia() {
+
+            currentIndex++;
+
+            if (currentIndex >= medias.length) {
+
+                currentIndex = 0;
+            }
+
+            renderMedia();
+        }
+
+        renderMedia();
+
+        // =========================
+        // FULLSCREEN
+        // =========================
+
+        document.addEventListener(
+            "click",
+            () => {
+
+                const el =
+                    document.documentElement;
+
+                if (el.requestFullscreen) {
+
+                    el.requestFullscreen();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

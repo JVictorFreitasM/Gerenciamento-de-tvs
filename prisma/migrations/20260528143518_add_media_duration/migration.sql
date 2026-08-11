@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Media" ADD COLUMN     "duracao" INTEGER NOT NULL DEFAULT 10;

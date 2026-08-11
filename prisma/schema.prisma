@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+//generator client {
+//  provider = "prisma-client"
+//  output   = "../generated/prisma"
+//}
+//
+//datasource db {
+//  provider = "postgresql"
+//}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// OS 12-B: login proprio (username/password) substituido pelo idp-client.
+// username/password/role ficam como legado (nao mais usados para
+// autenticacao/autorizacao) - email e idpUserId sao o novo vinculo com o
+// IdP central. setorId e dado local, associado por um "ti" apos o login
+// (Caminho B - ver OS 12-A), nao vem do token.
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String // legado, nao mais verificado (ver OS 12-B, secao 3.3)
+  email      String?  @unique // novo - chave de vinculo com o IdP
+  idpUserId  String?  @unique // novo - sub do token do IdP
+  setorId    Int? // novo - setor associado localmente
+  setor      Setor?   @relation(fields: [setorId], references: [id])
+  role       String   @default("user") // legado, nao mais usado para autorizacao
+  createdAt  DateTime @default(now())
+
+  medias                Media[]
+  setorAssignments      SetorAssignmentLog[] @relation("SetorAssignmentLog_User")
+  setorAssignmentsFeitas SetorAssignmentLog[] @relation("SetorAssignmentLog_AssignedBy")
+}
+
+model Setor {
+  id        Int      @id @default(autoincrement())
+  nome      String   @unique
+  createdAt DateTime @default(now())
+
+  tvs               TV[]
+  playlists         Playlist[]
+  medias            Media[]
+  usuarios          User[]
+  setorAssignments  SetorAssignmentLog[]
+}
+
+model TV {
+  id            Int       @id @default(autoincrement())
+  nome          String
+  identificador String    @unique
+  online        Boolean   @default(false)
+  lastSeenAt    DateTime?
+  // novo (OS 12-B, secao 3.9) - gerado aleatoriamente na criacao, exigido
+  // por query string/header nas rotas consumidas pelas TVs fisicas
+  // (/tv/:identificador, /videos, /uploads). Nunca sequencial/previsivel.
+  accessToken   String    @unique
+
+  setorId Int
+  setor   Setor @relation(fields: [setorId], references: [id])
+}
+
+// OS 12-B, secao 3.6: log simples de quem associou qual usuario a qual
+// setor e quando - auditoria local minima, sem pretensao de virar a
+// trilha completa de auditoria do IdP.
+model SetorAssignmentLog {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  user         User     @relation("SetorAssignmentLog_User", fields: [userId], references: [id])
+  setorId      Int?
+  setor        Setor?   @relation(fields: [setorId], references: [id])
+  assignedById Int
+  assignedBy   User     @relation("SetorAssignmentLog_AssignedBy", fields: [assignedById], references: [id])
+  createdAt    DateTime @default(now())
+}
+
+enum MediaTipo {
+  VIDEO
+  IMAGEM
+}
+
+model Media {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  filename  String
+  tipo      MediaTipo
+  tamanho   Int
+  duracao   Int       @default(10)
+  createdAt DateTime  @default(now())
+
+  setorId Int
+
+  setor        Setor @relation(fields: [setorId], references: [id])
+  uploadedById Int
+  uploadedBy   User  @relation(fields: [uploadedById], references: [id])
+
+  playlistItems PlaylistMedia[]
+}
+
+model Playlist {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  createdAt DateTime @default(now())
+
+  setorId Int   @unique
+  setor   Setor @relation(fields: [setorId], references: [id])
+
+  medias PlaylistMedia[]
+}
+
+model PlaylistMedia {
+  id         Int     @id @default(autoincrement())
+  playlistId Int
+  mediaId    Int
+  ordem      Int
+  
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  media    Media    @relation(fields: [mediaId], references: [id])
+  @@unique([playlistId, ordem])
+  
+}

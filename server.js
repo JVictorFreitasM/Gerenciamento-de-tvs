@@ -1,0 +1,19 @@
+require("dotenv").config();
+
+const app = require("./app");
+
+const PORT = process.env.PORT || 5001;
+
+app.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
+
+        const agora = new Date();
+
+        console.log(
+            `Servidor rodando na porta ${PORT} - ${agora.toLocaleString()}`
+        );
+
+    }
+);
