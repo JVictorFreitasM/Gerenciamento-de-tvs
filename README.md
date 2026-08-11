@@ -4,11 +4,6 @@ Sistema web para gerenciar painéis de TV corporativos por setor, permitindo o u
 
 ![Dashboard do TV Signage](screenshots/TV%20signade%20home.jpg)
 
-> As duas imagens que ficavam aqui (`Painel-de-Controle-TVs`,
-> `Playlist-diretoria`) eram do front antigo em EJS, substituído pela SPA
-> React na OS 12-C — removidas por não representarem mais o sistema atual.
-> Ver [Screenshots](#screenshots) para o estado das capturas novas.
-
 ## Índice
 
 1. [Funcionalidades](#funcionalidades)
