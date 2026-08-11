@@ -37,6 +37,7 @@ async function resolveLocalUser(req, res, next) {
     }
 
     if (!usuario) {
+        console.warn(`[auth] usuario_nao_vinculado: sub=${idpUser.sub} email=${idpUser.email} nome=${idpUser.name}`);
         return res.status(403).json({
             error: "usuario_nao_vinculado",
             message: "Sua conta está autenticada, mas ainda não foi cadastrada no TV Signage. Contate o TI.",
