@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "start": "node server.js",
-  "seed": "node prisma/seed.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node prisma/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:export": "node scripts/export-openapi.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,9 +26,10 @@
     "multer": "^2.1.1",
     "pg": "^8.21.0",
     "prisma": "^6.19.3",
-    "redis": "^4.7.0"
-  }
-  ,
+    "redis": "^4.7.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
+  },
   "prisma": {
     "seed": "node prisma/seed.js"
   }

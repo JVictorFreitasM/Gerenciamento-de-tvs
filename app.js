@@ -10,6 +10,7 @@ const { createTvAccessMiddleware } = require("./src/middleware/tvAccess");
 
 const apiRoutes = require("./src/routes/api.routes");
 const tvRoutes = require("./src/routes/tv.routes");
+const { setupSwagger } = require("./src/swagger");
 
 const app = express();
 
@@ -67,6 +68,48 @@ app.use(
     })
 );
 
+setupSwagger(app);
+
+/**
+ * @swagger
+ * /auth/login:
+ *   get:
+ *     summary: Inicia o login via IdP centralizado
+ *     tags: [Autenticacao]
+ *     security: []
+ *     responses:
+ *       302: { description: Redireciona pro IdP }
+ */
+/**
+ * @swagger
+ * /auth/callback:
+ *   get:
+ *     summary: Callback OAuth2 - recebe o code do IdP
+ *     description: Troca o code por tokens, guarda na sessao local (Redis), redireciona pro FRONTEND_URL.
+ *     tags: [Autenticacao]
+ *     security: []
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         schema: { type: string }
+ *       - in: query
+ *         name: state
+ *         schema: { type: string }
+ *     responses:
+ *       302: { description: Login concluido }
+ *       400: { description: state invalido/expirado }
+ */
+/**
+ * @swagger
+ * /auth/logout:
+ *   get:
+ *     summary: Encerra a sessao local e revoga o refresh_token no IdP (best-effort)
+ *     description: Redireciona pro homeUrl do IdP (menu central), nao de volta pro TV Signage - evita reabrir o mesmo sistema de onde o usuario acabou de sair (OS 17).
+ *     tags: [Autenticacao]
+ *     security: [{ sessionCookie: [] }]
+ *     responses:
+ *       302: { description: Redireciona pro menu central do IdP }
+ */
 // GET /auth/login, /auth/callback, /auth/logout (OS 12-B, secao 3.2/3.3).
 app.use(idpAuth.router);
 

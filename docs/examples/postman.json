@@ -1,0 +1,109 @@
+{
+  "info": {
+    "name": "TV Signage API",
+    "description": "Exemplos de requisicoes - sessao via cookie (login em /auth/login, fora do Postman)",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticacao",
+      "item": [
+        {
+          "name": "Login (abrir no navegador)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/auth/login", "host": ["{{api_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Usuario logado",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/api/me", "host": ["{{api_url}}"], "path": ["api", "me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/auth/logout", "host": ["{{api_url}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard e Setores",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/api/dashboard", "host": ["{{api_url}}"], "path": ["api", "dashboard"] }
+          }
+        },
+        {
+          "name": "Listar setores",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/api/setores", "host": ["{{api_url}}"], "path": ["api", "setores"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Playlist e Midia",
+      "item": [
+        {
+          "name": "Playlist de um setor",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/api/playlist/Recepcao", "host": ["{{api_url}}"], "path": ["api", "playlist", "Recepcao"] }
+          }
+        },
+        {
+          "name": "Upload de midia",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "media", "type": "file", "src": "/path/to/video.mp4" }]
+            },
+            "url": { "raw": "{{api_url}}/api/media/upload/Recepcao", "host": ["{{api_url}}"], "path": ["api", "media", "upload", "Recepcao"] }
+          }
+        },
+        {
+          "name": "Reordenar playlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"orderedIds\": [3, 1, 2]}" },
+            "url": { "raw": "{{api_url}}/api/playlist/reorder", "host": ["{{api_url}}"], "path": ["api", "playlist", "reorder"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (papel ti)",
+      "item": [
+        {
+          "name": "Setores + TVs cadastradas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{api_url}}/api/admin/setores", "host": ["{{api_url}}"], "path": ["api", "admin", "setores"] }
+          }
+        },
+        {
+          "name": "Cadastrar TV",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"nome\": \"TV Recepcao\", \"identificador\": \"recepcao-01\", \"setorId\": 1}" },
+            "url": { "raw": "{{api_url}}/api/admin/tvs", "host": ["{{api_url}}"], "path": ["api", "admin", "tvs"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [{ "key": "api_url", "value": "http://localhost:5001" }]
+}
