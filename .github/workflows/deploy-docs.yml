@@ -2,7 +2,7 @@ name: Deploy API Docs
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "src/routes/**"
       - "src/swagger.js"
@@ -35,7 +35,7 @@ jobs:
         run: npm run docs:export
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

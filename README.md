@@ -12,9 +12,10 @@ Sistema web para gerenciar painéis de TV corporativos por setor, permitindo o u
 4. [Autenticação via IdP](#autenticação-via-idp)
 5. [Como rodar com Docker](#como-rodar-com-docker-recomendado)
 6. [Como rodar localmente](#como-rodar-localmente-sem-docker)
-7. [Estrutura de rotas principais](#estrutura-de-rotas-principais)
-8. [Variáveis de ambiente](#variáveis-de-ambiente)
-9. [Screenshots](#screenshots)
+7. [Documentação da API](#documentação-da-api)
+8. [Estrutura de rotas principais](#estrutura-de-rotas-principais)
+9. [Variáveis de ambiente](#variáveis-de-ambiente)
+10. [Screenshots](#screenshots)
 
 ## Funcionalidades
 
@@ -226,6 +227,25 @@ sequenceDiagram
    ```
    http://localhost:5002
    ```
+
+## Documentação da API
+
+A API é documentada via [Swagger/OpenAPI](https://swagger.io/specification/), com anotações
+`@swagger` nas rotas (`src/routes/*.js`, `app.js`).
+
+Com o backend rodando (`npm start` ou via Docker), disponível em:
+
+| URL | Conteúdo |
+|---|---|
+| `http://localhost:5001/api-docs` | Swagger UI — interativo, permite testar os endpoints |
+| `http://localhost:5001/redoc` | ReDoc — leitura, mais confortável pra navegar |
+| `http://localhost:5001/api-docs.json` | Spec OpenAPI crua (JSON) |
+
+Sem precisar subir o backend, `npm run docs:export` gera `docs/openapi.json` só lendo os
+comentários `@swagger` (script usado no CI, `.github/workflows/deploy-docs.yml`, que publica a
+pasta `docs/` — spec, guias de [autenticação](docs/auth.md), [erros](docs/errors.md),
+[rate limit](docs/rate-limit.md) e [exemplos de uso](docs/examples/) — no GitHub Pages a cada push
+em `master`).
 
 ## Estrutura de rotas principais
 
